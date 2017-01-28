@@ -1,0 +1,533 @@
+#-----------------------------------------------------------
+# Vivado v2015.4 (64-bit)
+# SW Build 1412921 on Wed Nov 18 09:44:32 MST 2015
+# IP Build 1412160 on Tue Nov 17 13:47:24 MST 2015
+# Start of session at: Wed Oct  5 14:32:17 2016
+# Process ID: 5253
+# Current directory: /home/ckseol/RIO_code/RIO_code_1st/fpga
+# Command line: vivado -mode tcl
+# Log file: /home/ckseol/RIO_code/RIO_code_1st/fpga/vivado.log
+# Journal file: /home/ckseol/RIO_code/RIO_code_1st/fpga/vivado.jou
+#-----------------------------------------------------------
+place_design -help
+place_design
+
+Description: 
+Automatically place ports and leaf-level instances
+
+Syntax: 
+place_design  [-directive <arg>] [-no_timing_driven] [-timing_summary]
+              [-unplace] [-post_place_opt] [-quiet] [-verbose]
+
+Usage: 
+  Name                 Description
+  --------------------------------
+  [-directive]         Mode of behavior (directive) for this command. Please 
+                       refer to Arguments section of this help for values for
+                       this option.
+                       Default: Default
+  [-no_timing_driven]  Do not run in timing driven mode
+  [-timing_summary]    Enable accurate post-placement timing summary.
+  [-unplace]           Unplace all the instances which are not locked by 
+                       Constraints.
+  [-post_place_opt]    Run only the post commit optimizer
+  [-quiet]             Ignore command errors
+  [-verbose]           Suspend message limits during command execution
+
+Categories: 
+Tools
+
+Description:
+
+  Place the specified ports and logic cells in the current design, or all
+  ports and logic cells, onto device resources on the target part. The tool
+  optimizes placement to minimize negative timing slack and reduce overall
+  wire length, while also attempting to spread out placement to reduce
+  routing congestion.
+
+  Placement is one step of the complete design implementation process, which
+  can be run automatically through the use of the launch_runs command when
+  running the Vivado tools in Project Mode.
+
+  In Non-Project Mode, the implementation process must be run manually with
+  the individual commands: opt_design, place_design, phys_opt_design,
+  power_opt_design, and route_design. Refer to the Vivado Design Suite User
+  Guide: Design Flows Overview (UG892) for a complete description of Project
+  Mode and Non-Project Mode.
+
+  Both placement and routing can be completed incrementally, based on prior
+  results stored in a Design Checkpoint file (DCP), using the incremental
+  compilation flow. Refer to the read_checkpoint command, or to Vivado Design
+  Suite User Guide: Implementation (UG904) for more information on
+  incremental place and route.
+
+  Note: The place_design can be multi-threaded to speed the process. Refer to
+  the set_param command for more information on setting the
+  general.maxThreads parameter
+
+  You can also manually place some elements of the design using place_ports,
+  or by setting LOC properties on the cell, and then automatically place the
+  remainder of the design using place_design.
+
+  This command requires an open synthesized design, and it is recommended
+  that you run the opt_design command prior to running place_design to avoid
+  placing a suboptimal netlist.
+
+Arguments:
+
+  -directive <arg> - (Optional) Direct placement to achieve specific design
+  objectives. Only one directive can be specified for a single place_design
+  command, and values are case-sensitive. Supported values include:
+
+   *  Explore - Increased placer effort in detail placement and
+      post-placement optimization.
+
+   *  WLDrivenBlockPlacement - Wire length-driven placement of RAM and DSP
+      blocks. Override timing-driven placement by directing the Vivado placer
+      to minimize the distance of connections to and from blocks.
+
+   *  AltWLDrivenPlacement - The Vivado placer may increase wire length, or
+      the cumulative distance between connected cells, in order to place
+      related logic placement within physical boundaries such as clock
+      regions or IO column crossings. This directive gives higher priority to
+      minimizing wire length.
+
+      Note: This directive is for use with UltraScale devices only
+
+   *  ExtraNetDelay_high - Increases estimated delay of high fanout and
+      long-distance nets. Three levels of pessimism are supported: high,
+      medium, and low. ExtraNetDelay_high applies the highest level of
+      pessimism.
+
+   *  ExtraNetDelay_medium - Increases estimated delay of high fanout and
+      long-distance nets. Three levels of pessimism are supported: high,
+      medium, and low. ExtraNetDelay_medium applies the default level of
+      pessimism.
+
+   *  ExtraNetDelay_low - Increases estimated delay of high fanout and
+      long-distance nets. Three levels of pessimism are supported: high,
+      medium, and low. ExtraNetDelay_low applies the lowest level of
+      pessimism.
+
+   *  SpreadLogic_high - Distribute logic across the device. Three levels are
+      supported: high, medium, and low. SpreadLogic_high achieves the highest
+      level of distribution.
+
+   *  SpreadLogic_medium - Distribute logic across the device. Three levels
+      are supported: high, medium, and low. SpreadLogic_medium achieves a
+      nominal level of distribution.
+
+   *  SpreadLogic_low - Distribute logic across the device. Three levels are
+      supported: high, medium, and low. SpreadLogic_low achieves a minimal
+      level of distribution.
+
+   *  ExtraPostPlacementOpt - Increased placer effort in post-placement
+      optimization.
+
+   *  SSI_ExtraTimingOpt - Use an alternate algorithm for timing-driven
+      partitioning across SLRs.
+
+   *  SSI_SpreadSLLs - Partition across SLRs and allocate extra area for
+      regions of higher connectivity.
+
+   *  SSI_BalanceSLLs - Partition across SLRs while attempting to balance
+      SLLs between SLRs.
+
+   *  SSI_BalanceSLRs - Partition across SLRs to balance number of cells
+      between SLRs.
+
+   *  SSI_HighUtilSLRs - Direct the placer to attempt to place logic closer
+      together in each SLR.
+
+   *  RuntimeOptimized - Run fewest iterations, trade higher design
+      performance for faster runtime.
+
+   *  Quick - Absolute, fastest runtime, non-timing-driven, performs the
+      minimum required placement for a legal design.
+
+   *  Default - Run place_design with default settings.
+
+  Refer to the Vivado Design Suite User Guide: Implementation (UG904) for
+  more information on placement strategies and the -directive option.
+
+  Note: The -directive option controls the overall placement strategy, and is
+  not compatible with any specific place_design options. It can only be used
+  with -quiet and -verbose. In addition, the -directive option is ignored if
+  the design is using the incremental compilation flow as defined by
+  read_checkpoint -incremental.
+
+  -no_timing_driven - (Optional) Disables the default timing driven placement
+  algorithm. This results in a faster placement based on wire lengths, but
+  ignores any timing constraints during the placement process.
+
+  -timing_summary - (Optional) Report the post-placement worst negative slack
+  (WNS) using results from static timing analysis. The WNS value is identical
+  to that of report_timing_summary when run on the post-placement design. By
+  default the placer reports an estimated WNS based on incremental placement
+  updates during the design implementation. The -timing_summary option incurs
+  additional runtime to run a full timing analysis.
+
+  -unplace - (Optional) Unplace all the instances which are not locked by
+  constraints. Cells with fixed placement (IS_LOC_FIXED set to true), are not
+  affected.
+
+  Note: Use the set_property to change IS_LOC_FIXED to False prior to
+  unplacing fixed cells.
+
+  -post_place_opt - (Optional) Run optimization after placement to improve
+  critical path timing at the expense of additional placement and routing
+  runtime. This optimization can be run at any stage after placement. The
+  optimization examines the worst case timing paths and tries to improve
+  placement to reduce delay.
+
+  Note: Any placement changes will result in unrouted connections, so
+  route_design will need to be run after -post_place_opt.
+
+  -quiet - (Optional) Execute the command quietly, returning no messages from
+  the command. The command also returns TCL_OK regardless of any errors
+  encountered during execution.
+
+  Note: Any errors encountered on the command-line, while launching the
+  command, will be returned. Only errors occurring inside the command will be
+  trapped.
+
+  -verbose - (Optional) Temporarily override any message limits and return
+  all messages from this command.
+
+  Note: Message limits can be defined with the set_msg_config command.
+
+Examples:
+
+  The following example places the current design, runs optimization, routes
+  the design, runs post placement optimization, and then reroutes the design
+  to cleanup any unconnected nets as a result of post placement optimization:
+
+    place_design
+    phys_opt_design
+    route_design
+    place_design -post_place_opt
+    phys_opt_design
+    route_design
+
+  The following example directs the Vivado placer to try different placement
+  algorithms to achieve a better placement result:
+
+    place_design -directive Explore
+
+  This example unplaces the current design:
+
+    place_design -unplace
+
+See Also:
+
+   *  launch_runs
+   *  opt_design
+   *  place_ports
+   *  phys_opt_design
+   *  power_opt_design
+   *  read_checkpoint
+   *  route_design
+   *  set_property
+route_design -help
+route_design
+
+Description: 
+Route the current design
+
+Syntax: 
+route_design  [-unroute] [-release_memory] [-nets <args>] [-physical_nets]
+              [-pin <arg>] [-directive <arg>] [-tns_cleanup]
+              [-no_timing_driven] [-preserve] [-delay] [-auto_delay]
+              -max_delay <arg> -min_delay <arg> [-timing_summary] [-finalize]
+              [-quiet] [-verbose]
+
+Usage: 
+  Name                 Description
+  --------------------------------
+  [-unroute]           Unroute whole design or the given nets/pins if used 
+                       with -nets or -pin.
+  [-release_memory]    Release Router memory. Not compatible with any other 
+                       options.
+  [-nets]              Operate on the given nets.
+  [-physical_nets]     Operate on all physical nets.
+  [-pin]               Operate on the given pin.
+  [-directive]         Mode of behavior (directive) for this command. Please 
+                       refer to Arguments section of this help for values for
+                       this option.
+                       Default: Default
+  [-tns_cleanup]       Do optional TNS clean up.
+  [-no_timing_driven]  Do not run in timing driven mode.
+  [-preserve]          Preserve existing routing.
+  [-delay]             Use with -nets or -pin option to route in delay driven
+                       mode.
+  [-auto_delay]        Use with -nets or -pin option to route in constraint 
+                       driven mode.
+  -max_delay           Use with -pin option to specify the max_delay 
+                       constraint on the pin.When specified -delay is 
+                       implicit.
+  -min_delay           Use with -pin option to specify the min_delay 
+                       constraint on the pin.When specified -delay is 
+                       implicit.
+  [-timing_summary]    Enable post-router signoff timing summary.
+  [-finalize]          finalize route_design in interactive mode.
+  [-quiet]             Ignore command errors
+  [-verbose]           Suspend message limits during command execution
+
+Categories: 
+Tools
+
+Description:
+
+  Route the nets in the current design to complete logic connections on the
+  target part.
+
+  Predefined routing strategies can be quickly selected using the
+  route_design -directive command, or specific route options can be
+  configured to define your own routing strategy.
+
+  Routing can be completed automatically with route_design, or can be
+  completed iteratively using the various options of the route_design command
+  to achieve route completion and timing closure. Iterative routing provides
+  you some control over the routing process to route critical nets first and
+  then route less critical nets, and to control the level of effort and the
+  timing algorithms for these various route passes.
+
+  Routing is one step of the complete design implementation process, which
+  can be run automatically through the use of the launch_runs command when
+  running the Vivado tools in Project Mode.
+
+  In Non-Project Mode, the implementation process must be run manually with
+  the individual commands: opt_design, place_design, phys_opt_design,
+  power_opt_design, and route_design. Refer to the Vivado Design Suite User
+  Guide: Design Flows Overview (UG892) for a complete description of Project
+  Mode and Non-Project Mode.
+
+  Note: The route_design can be multi-threaded to speed the process. Refer to
+  the set_param command for more information on setting the
+  general.maxThreads parameter
+
+  Both placement and routing can be completed incrementally, based on prior
+  results stored in a Design Checkpoint file (DCP), using the incremental
+  compilation flow. Refer to the read_checkpoint command, or to Vivado Design
+  Suite User Guide: Implementation (UG904) for more information on
+  incremental place and route.
+
+  This command requires a placed design, and it is recommended that you have
+  optimized the design with opt_design prior to placement.
+
+Arguments:
+
+  -unroute <arg> - (Optional) Unroute nets in the design. If no arguments are
+  specified, all nets in the design are unrouted. The route_design command
+  will not route any nets when the -unroute option is specified.
+
+   *  Combine with the -nets option to limit unrouting to a list of nets.
+
+   *  Combine with the -pin option to unroute from the pin to the nearest
+      branch of the net.
+
+   *  Combine with the -physical_nets option to unroute all logic 1 and logic
+      0 nets.
+
+  -release_memory - (Optional) Free router memory resources for subsequent
+  route passes. This option does not run route passes, but only releases
+  memory held by the router to reduce router initialization. The router will
+  need to reload design data for subsequent route passes.
+
+  -nets <args> - (Optional) Route or unroute only the specified net objects.
+  Net objects must be specified using the get_nets command.
+
+  Note: The router uses a quick route approach to find a routing solution for
+  the specified nets, ignoring timing delays, when routing with -nets,
+  -physical_nets, or -pin specified. Use -delay to find a route with the
+  shortest delay.
+
+  -physical_nets - (Optional) Route or unroute only logic zero and logic one
+  nets.
+
+  -pin <arg> - (Optional) Route or unroute to the given pin which must be a
+  cell input. If a pin is driven by a multiple fanout net, only the route
+  segment between the net and pin are affected.
+
+  -directive <arg> - (Optional) Direct routing to achieve specific design
+  objectives. Only one directive can be specified for a single route_design
+  command, and values are case-sensitive. Supported values are:
+
+   *  Explore - Causes the Vivado router to explore different critical path
+      routes based on timing, after an initial route.
+
+      Note: The -directive Explore option launches the Vivado static timing
+      analyzer for the most accurate timing information, like the
+      -timing_summary option
+
+   *  NoTimingRelaxation - Prevents the router from relaxing timing to
+      complete routing. If the router has difficulty meeting timing, it will
+      run longer to try to meet the original timing constraints.
+
+   *  MoreGlobalIterations - Uses detailed timing analysis throughout all
+      stages instead of just the final stages, and will run more global
+      iterations even when timing improves only slightly.
+
+   *  HigherDelayCost - Adjusts the router`s internal cost functions to
+      emphasize delay over iterations, allowing a trade-off of runtime for
+      better performance.
+
+   *  AdvancedSkewModeling - Uses more accurate skew modeling throughout all
+      routing stages which may improve design performance on higher-skew
+      clock networks.
+
+   *  RuntimeOptimized - Run fewest iterations, trade higher design
+      performance for faster runtime.
+
+   *  Quick - Absolute fastest runtime, non-timing-driven, performs the
+      minimum required routing for a legal design.
+
+   *  Default - Run route_design with default settings.
+
+  Refer to the Vivado Design Suite User Guide: Implementation (UG904) for
+  more information on the effects of each directive.
+
+  Note: The -directive option controls the overall routing strategy, and is
+  not compatible with any specific route_design options, except -preserve and
+  -tns_cleanup. It can also be used with -quiet and -verbose. In addition,
+  the -directive option is ignored if the design is using the incremental
+  compilation flow as defined by read_checkpoint -incremental
+
+  -tns_cleanup - (Optional) By default, to reduce runtime, the router focuses
+  on optimizing the Worst Negative Slack (WNS) path as opposed to Total
+  Negative Slack (TNS) paths. This option invokes an optional phase at the
+  end of routing where the router attempts to fix the TNS paths, those
+  failing paths other than the WNS path. This option may reduce TNS at the
+  cost of added runtime, but will not affect WNS. The -tns_cleanup option is
+  recommended when using post-route phys_opt_design to ensure that
+  optimization focuses on the WNS path and does not waste effort on TNS paths
+  that can be fixed by the router. This option can be used in combination
+  with -directive.
+
+  -no_timing_driven - (Optional) Disables the default timing driven routing
+  algorithm. This results in faster routing results, but ignores any timing
+  constraints during the routing process.
+
+  -preserve - (Optional) Existing completed routes will be preserved and not
+  subject to the rip-up and reroute phase. This does not apply to routing
+  that is fixed using the IS_ROUTE_FIXED or FIXED_ROUTE properties, which is
+  not subject to being rerouted. Routing is preserved only for the current
+  route_design command.
+
+  Note: Partially routed nets are subject to rerouting to complete the
+  connection. If you want to preserve the routing of a partially routed net,
+  you should apply the FIXED_ROUTE property to the portion of the route you
+  want to preserve
+
+  -delay - (Optional) Can only be used in combination with the -nets or -pin
+  options. By default nets are routed to achieve the fastest routing runtime,
+  ignoring timing constraints, when using -nets and -pin options. The -delay
+  option directs the router to try to achieve the shortest routed
+  interconnect delay, but still ignores timing constraints.
+
+  Note: You can specify multiple nets to route at the same time using the
+  -delay option, but this can result in conflicts for routing resources. The
+  Vivado router may create node overlap errors if the nets are in close
+  proximity to each other because the -delay option will reuse routing
+  resources to achieve the shortest routes for all specified nets. Therefore
+  it is recommended to route nets and pins individually using the -delay
+  option, beginning with the most critical.
+
+  -auto_delay - (Optional) Can only be used in combination with the -nets or
+  -pin options. By default nets are routed to achieve the fastest routing
+  runtime, ignoring timing constraints, when using -nets and -pin options.
+  The -auto_delay option directs the router to try to achieve the shortest
+  routed interconnect delay using the defined timing constraints.
+
+  -max_delay <arg> - (Optional) Can only be used with -pin. Directs the
+  router to try to achieve a delay less than or equal to the specified delay
+  given in picoseconds. When this options is specified, the -delay option is
+  implied.
+
+  -min_delay <arg> - (Optional) Can only be used with -pin. Directs the
+  router to try to achieve a delay greater than or equal to the specified
+  delay given in picoseconds. When this option is specified, the -delay
+  option is implied.
+
+  -timing_summary - (Optional) By default, the router outputs a final timing
+  summary to the log, based on Vivado router internal estimated timing which
+  might differ slightly from the actual routed timing due to pessimism in the
+  delay estimates. The -timing_summary option forces the router to launch the
+  Vivado static timing analyzer to report the timing summary based on actual
+  routed delays, but incurs additional run time for the static timing
+  analysis. The timing summary consists of the Worst Negative Slack (WNS),
+  Total Negative Slack (TNS), Worst Hold Slack (WHS), and Total Hold Slack
+  (THS). The values are identical to that of report_timing_summary when run
+  on the post-route design.
+
+  Note: The Vivado static timing analyzer is also launched by the -directive
+  Explore option
+
+  -finalize - (Optional) When routing interactively you can specify
+  route_design -finalize to complete any partially routed connections.
+
+  -quiet - (Optional) Execute the command quietly, returning no messages from
+  the command. The command also returns TCL_OK regardless of any errors
+  encountered during execution.
+
+  Note: Any errors encountered on the command-line, while launching the
+  command, will be returned. Only errors occurring inside the command will be
+  trapped.
+
+  -verbose - (Optional) Temporarily override any message limits and return
+  all messages from this command.
+
+  Note: Message limits can be defined with the set_msg_config command.
+
+Examples:
+
+  Route the entire design, and direct the router to try multiple algorithms
+  for improving critical path delay:
+
+    route_design -directive Explore
+
+  The following example routes the set of timing critical nets,
+  $criticalNets, to the shortest interconnect delay, marks the nest as fixed
+  using the IS_ROUTE_FIXED property, and then routes the rest of the design
+  using a low effort directive for fast results:
+
+    route_design -delay -nets $criticalNets
+    set_property IS_ROUTE_FIXED 1 $criticalNets
+    route_design -directive RuntimeOptimized
+
+  Route the specified nets using the fastest runtime:
+
+    route_design -nets [get_nets ctrl0/ctr*]
+
+  Route the specified nets to get the shortest interconnect delays:
+
+    route_design -nets [get_nets ctrl0/ctr*] -delay
+
+  Route to a particular pin:
+
+    route_design -pin [get_pins ctrl0/reset_reg/D]
+
+  Route to a particular pin, try to achieve less than 500 ps delay:
+
+    route_design -pin [get_pins ctrl0/reset_reg/D] -max_delay 500
+
+  Route to a particular pin, try to achieve more than 200 ps delay:
+
+    route_design -pin [get_pins ctrl0/ram0/ADDRARDADDR] -min_delay 200
+
+See Also:
+
+   *  get_nets
+   *  get_pins
+   *  launch_runs
+   *  opt_design
+   *  phys_opt_design
+   *  place_design
+   *  power_opt_design
+   *  read_checkpoint
+   *  set_property
+   *  write_checkpoint
+:q!
+invalid command name ":q!"
+exit
+INFO: [Common 17-206] Exiting Vivado at Wed Oct  5 14:33:56 2016...

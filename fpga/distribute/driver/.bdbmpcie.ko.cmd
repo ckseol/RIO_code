@@ -1,0 +1,1 @@
+cmd_/home/ckseol/RIO_code/RIO_code_1st/fpga/distribute/driver/bdbmpcie.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/ckseol/RIO_code/RIO_code_1st/fpga/distribute/driver/bdbmpcie.ko /home/ckseol/RIO_code/RIO_code_1st/fpga/distribute/driver/bdbmpcie.o /home/ckseol/RIO_code/RIO_code_1st/fpga/distribute/driver/bdbmpcie.mod.o

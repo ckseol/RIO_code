@@ -1,0 +1,10 @@
+software shm_open /bdbm13120 returned 3 with errno 0
+bsim PCIe interface init done!
+[Page:0] 0
+[Page:1] 0
+[Page:2] 0
+[Page:3] 0
+[Page:4] 0
+[Page:5] 0
+[Page:6] 0
+WL cnt: 8

@@ -1,0 +1,5 @@
+software shm_open /bdbm8735 returned 3 with errno 0
+bsim PCIe interface init done!
+	FRM ERR: 0
+	FRM CNT L: 158	FRM CNT M: 0	FRM ERR: 0
+	FRM CNT L: 363	FRM CNT M: 0
